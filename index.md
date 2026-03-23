@@ -55,3 +55,8 @@
 
 SRE 思維：不僅僅是監控，更是將維運流程「代碼化」的實踐。
 
+## 📖 專案目錄 (Project Sections)
+* [Step 1: 專案簡介與目標](./01_intro.md)
+* [Step 2: 系統架構與邏輯](./02_architecture.mmd)
+* [Step 3: 舊有模式與痛點分析](./03_legacy.md)
+* [Step 4: 優化後的自動化方案](./04_optimized.md)
