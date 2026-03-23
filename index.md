@@ -1,3 +1,6 @@
+---
+layout: default
+---
 
 # 🚀 Zabbix RAID 自動化監控模組 (StorCLI 版)
 * 將傳統 MIS 的「人肉巡檢」轉化為「Code-Driven」的自動化監控系統。
