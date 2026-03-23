@@ -1,3 +1,4 @@
 remote_theme: pages-themes/cayman@v0.2.0
 title: Zabbix RAID 監控自動化專案
 description: 從傳統 MIS 轉向 SRE 的實戰紀錄
+incremental: true
