@@ -1,7 +1,7 @@
 name: Deploy Portfolio
 on:
   push:
-    branches: [ main ] # 當你 push 到 main 分支時觸發
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -10,7 +10,8 @@ permissions:
 
 jobs:
   build-and-deploy:
-    environment: 
+    # 關鍵：這行讓 GitHub Pages 知道「我要對接了」
+    environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
@@ -20,13 +21,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        with:
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' # 部署整個專案目錄
+          path: '.' # 部署根目錄（含 index.md 和 _config.yml）
 
       - name: Deploy to GitHub Pages
         id: deployment
