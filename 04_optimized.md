@@ -1,4 +1,4 @@
-###04. 現行自動化監控方案 (Current Automation Solution)為了徹底解決人工巡檢的低效率與資訊斷層，我開發了一套基於 Zabbix + StorCLI 的自動化監控架構。
+04. 現行自動化監控方案 (Current Automation Solution)為了徹底解決人工巡檢的低效率與資訊斷層，我開發了一套基於 Zabbix + StorCLI 的自動化監控架構。
 #  這套系統實現了「無須登入、主動告警、自動紀錄」的目標。
 #  🏗️ 系統架構與技術棧 (Architecture)數據採集：使用 storcli64.exe 命令列工具，避開沉重的 MSM UI 負擔。
 #  傳輸通道：透過 Zabbix Agent (Active/Passive) 將硬體狀態推播至監控中心。
