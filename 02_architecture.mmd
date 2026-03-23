@@ -1,0 +1,5 @@
+graph LR
+    A[受控端設備] -->|PowerShell/SNMP| B(Zabbix Server)
+    B -->|LLD 自動發現| C{觸發器判斷}
+    C -->|異常通知| D[Line/Email Notify]
+    B -->|Data API| E[Grafana Canvas Dashboard]
