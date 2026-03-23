@@ -8,7 +8,7 @@ graph TD
     end
 
     subgraph "Zabbix Server (Processing)"
-        C -->|JavaScript| G[解析 JSON 取出 {#SLOT}]
+        C -->|JavaScript| G["解析 JSON 取出 {#SLOT}"]
         G -->|產生| H[Item Prototypes]
         D -->|Regex| I[過濾: Onln/Fail/Rbld]
         E -->|Regex| J[過濾: Optl/Dgrd/Pdgd]
