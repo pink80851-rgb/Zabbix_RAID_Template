@@ -1,5 +1,26 @@
-graph LR
-    A[受控端設備] -->|PowerShell/SNMP| B(Zabbix Server)
-    B -->|LLD 自動發現| C{觸發器判斷}
-    C -->|異常通知| D[Line/Email Notify]
-    B -->|Data API| E[Grafana Canvas Dashboard]
+graph TD
+    subgraph "Windows Server (Agent Side)"
+        A[storcli64.exe] -->|API/CLI Call| B{UserParameter}
+        B -->|raid.pd.discovery| C[LLD: 磁碟自動發現]
+        B -->|raid.pd.status| D[PD: 實體碟狀態]
+        B -->|raid.vd.status| E[VD: 虛擬碟狀態]
+        B -->|raid.roc.temp| F[ROC: 晶片溫度]
+    end
+
+    subgraph "Zabbix Server (Processing)"
+        C -->|JavaScript| G[解析 JSON 取出 {#SLOT}]
+        G -->|產生| H[Item Prototypes]
+        D -->|Regex| I[過濾: Onln/Fail/Rbld]
+        E -->|Regex| J[過濾: Optl/Dgrd/Pdgd]
+        F -->|數值| K[溫度監測]
+    end
+
+    subgraph "Triggers & Actions"
+        I -->|Status <> Onln| L[[告警: 磁碟異常]]
+        J -->|Status <> Optl| M[[告警: RAID 降級]]
+        K -->|> 75°C| N[[告警: 晶片過熱]]
+    end
+
+    style L fill:#f96,stroke:#333
+    style M fill:#f96,stroke:#333
+    style N fill:#f66,stroke:#333
