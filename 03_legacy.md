@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 ### 🛠️ 舊有作業流程 (Workflow)
 * **遠端連線**：維運人員需逐一啟動 RDP 連線至各台伺服器。
 * **啟動工具**：手動開啟 MegaRAID Storage Manager (MSM) UI。
