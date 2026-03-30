@@ -107,20 +107,6 @@ DiskSlot
 Raid
 STATUS
 
-👉 可快速整合：
-
-Grafana 篩選
-Zabbix Event correlation
-多維度分析
-📂 專案結構建議 (Repository Structure)
-zabbix-raid-template/
-├── templates/
-│   └── raid_template.json
-├── docs/
-│   └── architecture.md
-├── dashboards/
-│   └── grafana_raid_dashboard.json
-└── README.md
 🧭 SRE 實務價值 (SRE Perspective)
 
 本專案符合 SRE 核心理念：
