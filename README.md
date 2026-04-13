@@ -1,123 +1,77 @@
-📊 Zabbix RAID Monitoring Template (SRE-Oriented)
-📌 專案目標 (Project Objective)
+📌 專案概述 (Overview)
 
-本專案提供一套以 Zabbix 6.0 為基礎的 RAID 監控模板，專注於：
+本專案基於 Zabbix 6.0 建立 RAID 監控與自動化觀測系統，目標是將傳統「人工 RAID 檢查流程」轉換為：
 
-🔍 自動化 RAID 狀態監控
-🔁 透過 LLD (Low-Level Discovery) 減少人工維護成本
-⚠️ 即時異常偵測與告警
-🧩 模組化設計，便於擴展與重用
-🎯 解決的核心問題
-傳統 RAID 監控需手動逐顆設定 disk item
-無法即時掌握 RAID 卡溫度與磁碟狀態
-重複性維運操作（RDP / CLI 檢查）效率低
+🔥 可觀測（Observability） + 自動化（Automation） + 可告警（Alerting）的一體化監控系統
 
-👉 本模板將上述流程 完全自動化 + 標準化
+🎯 解決的核心問題 (Problem Statement)
 
-🏗️ 技術架構 (Technical Architecture)
+在傳統 RAID 維運中存在以下問題：
 
-本模板採用 Zabbix 原生功能，結合多種 preprocessing 與 discovery 技術：
+❌ RAID 狀態需手動登入主機或 UI 查詢
+❌ Disk Slot / 狀態需逐顆人工確認
+❌ RAID 異常依賴人為巡檢（非即時）
+❌ 多機器環境下維運成本線性上升
+❌ 無法標準化監控與告警邏輯
+🧠 本專案解決的本質問題
 
-🔧 核心組件
-Zabbix Template
-RAID 卡溫度監控 (raid.roc.temp)
-RAID 總體狀態 (raid.vd.status)
-Low-Level Discovery (LLD)
-自動發現 RAID Disk Slot (raid.pd.discovery)
-動態生成以下監控項目：
-Disk Capacity
-Disk Serial Number
-Disk State
-Item Preprocessing
-JSONPATH：解析 RAID CLI JSON 結構
-JavaScript：自訂 Slot 解析邏輯
-REGEX：擷取狀態與容量資訊
-📊 架構流程
+🔥 將「RAID 人工檢查流程」轉換為「資料驅動監控系統」
+
+核心改善：
+
+減少人工巡檢（Toil Reduction）
+降低遺漏與誤判風險
+提升 RAID 異常反應速度（MTTR 降低）
+建立標準化監控模型
+🏗️ 系統架構 (Architecture)
 RAID CLI / API
       ↓
-   JSON Output
+JSON Output
       ↓
-[ Zabbix Preprocessing ]
+Zabbix Preprocessing Layer
   - JSONPATH
   - JavaScript
   - REGEX
       ↓
- Low-Level Discovery (LLD)
+Low-Level Discovery (LLD)
       ↓
- Item Prototypes
+Item / Trigger Prototypes
       ↓
- Trigger Prototypes
-      ↓
- Alert / Monitoring
-🚀 擴展性 (Scalability & Extensibility)
+Alerting System
+🔧 核心功能 (Core Features)
+🟢 1. RAID 狀態監控
+RAID 卡溫度監控 (raid.roc.temp)
+RAID Virtual Disk 狀態監控 (raid.vd.status)
+🟡 2. 自動化磁碟發現 (LLD)
 
-本專案設計時已考慮 SRE 實務中的擴展需求：
+透過 Zabbix LLD：
 
-🔌 可擴展方向
-✅ 支援多品牌 RAID Controller（LSI / MegaRAID / Dell PERC）
-✅ 可延伸至：
-CPU / Memory / NIC 監控
-Storage (SSD / NVMe)
-✅ 可整合：
-Prometheus Exporter
-Grafana Dashboard
-AlertManager / Webhook
-🧱 模組化設計
-每個監控項目皆為 獨立 item prototype
-可快速複製並套用至其他硬體監控場景
-Trigger 與 Item 解耦，方便調整告警策略
-💡 技術亮點 (Technical Highlights)
-🔍 1. LLD 自動化監控
-自動偵測 RAID Disk Slot
-無需手動新增磁碟
-適用於動態變更環境（熱插拔 / 擴充）
-🧠 2. JavaScript + JSONPATH 組合解析
-var input = JSON.parse(value);
-var output = [];
+自動發現 Disk Slot
+自動生成監控項目
+Capacity
+Serial Number
+State
 
-input.forEach(function(item) {
-    var slot = item["EID:Slt"].split(":")[1];
-    output.push({ "{#SLOT}": slot });
-});
+👉 無需人工新增 disk items
 
-return JSON.stringify(output);
-精準解析 RAID CLI JSON 結構
-動態產生 LLD Macro {#SLOT}
-提高資料抽取彈性
-🧹 3. 高效資料清洗 (Preprocessing Pipeline)
-使用 REGEX：
-擷取容量 (TB / GB)
-擷取狀態 (Onln / Fail / Rebuild)
-減少不必要資料寫入 Zabbix DB
-提升效能與可讀性
-🚨 4. 智慧告警設計
-RAID 溫度告警：
+🔴 3. 異常告警機制
+RAID 溫度 > 75°C → WARNING
+RAID 狀態非 Onln / GHS → Trigger alert
+Recovery 條件：
+溫度 < 70°C 自動恢復
 
-75°C 觸發
+👉 降低 false alarm 與誤判率
 
-< 70°C 自動恢復
-Disk 狀態告警：
-非 Onln / GHS 即觸發 WARNING
+🧹 4. 資料標準化處理（Preprocessing）
 
-👉 避免誤報（False Positive），提高告警品質
+使用：
 
-🔖 5. Tag-based 分類設計
-使用 Tag：
-DiskSlot
-Raid
-STATUS
+JSONPATH（結構解析）
+REGEX（資料抽取）
+JavaScript（slot mapping）
 
-🧭 SRE 實務價值 (SRE Perspective)
+👉 效果：
 
-本專案符合 SRE 核心理念：
-
-📉 降低 Toil（重複性勞務）
-⚙️ 自動化監控流程
-📊 提高系統可觀測性 (Observability)
-🚨 改善 Incident Response 時間
-📎 未來優化方向 (Future Improvements)
- 加入 RAID rebuild 進度監控
- 整合 Grafana 視覺化 Dashboard
- 建立 Alert 分級（Critical / Warning / Info）
- 支援多 Controller aggregation
- 與 CMDB / Asset 系統整合
+減少 Zabbix 儲存負擔
+提升資料一致性
+強化可觀測性
