@@ -72,6 +72,8 @@ JavaScript（slot mapping）
 
 👉 效果：
 
-減少 Zabbix 儲存負擔
-提升資料一致性
-強化可觀測性
+📉 降低 Toil（重複人工檢查）
+⏱️ 降低 MTTR（故障回應時間）
+📡 提升可觀測性（Observability）
+🚨 提升告警品質（Signal > Noise）
+🧩 建立標準化監控模型
